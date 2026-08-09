@@ -1,0 +1,564 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>El cumple de Nico — Jump Park</title>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>👻</text></svg>">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Eagle+Lake&family=Baloo+2:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #10151b;
+    --bg-2: #191024;
+    --surface: #1e1530;
+    --surface-2: #291c3d;
+    --border: #3c2c55;
+    --text: #f4f1e4;
+    --text-dim: #b4bdbb;
+    --accent: #4fe3a3;
+    --accent-dim: #2f8f6c;
+    --accent-ink: #06231a;
+    --accent-2: #e8b34d;
+    --accent-2-dim: #a97a2c;
+    --accent-2-ink: #2a1c05;
+    --danger: #e0684f;
+    --glow: 0 0 44px rgba(79, 227, 163, 0.28);
+    --font-display: 'Eagle Lake', 'Iowan Old Style', Georgia, serif;
+    --font-body: 'Baloo 2', 'Trebuchet MS', system-ui, sans-serif;
+  }
+
+  /* Paleta fija (mansión de noche) — no sigue el modo claro/oscuro del sistema a propósito. */
+
+  * { box-sizing: border-box; }
+  html, body { margin: 0; padding: 0; }
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: var(--font-body);
+    line-height: 1.6;
+    overflow-x: hidden;
+    -webkit-font-smoothing: antialiased;
+  }
+  a { color: inherit; }
+  h1, h2 { font-family: var(--font-display); text-wrap: balance; margin: 0; font-weight: 400; }
+
+  .page { max-width: 720px; margin: 0 auto; padding: 0 1.25rem 3rem; }
+
+  /* ---------- Hero ---------- */
+  .hero {
+    position: relative;
+    margin: 0 -1.25rem;
+    padding: 4.5rem 1.5rem 5rem;
+    overflow: hidden;
+    background:
+      radial-gradient(60% 50% at 82% 8%, rgba(79, 227, 163, 0.16), transparent 60%),
+      radial-gradient(70% 60% at 15% 95%, rgba(232, 179, 77, 0.10), transparent 65%),
+      linear-gradient(180deg, var(--bg-2), var(--bg) 70%);
+    text-align: center;
+    isolation: isolate;
+  }
+  .ghosts { position: absolute; inset: 0; z-index: 0; }
+  .ghost { position: absolute; opacity: 0.5; filter: drop-shadow(0 0 14px rgba(79, 227, 163, 0.35)); }
+  .ghost svg { display: block; width: 100%; height: 100%; }
+  .ghost-a { width: 92px; top: 6%;  left: 6%;  animation: float-a 7s ease-in-out infinite; }
+  .ghost-b { width: 60px; top: 58%; left: 82%; animation: float-b 8.5s ease-in-out infinite; opacity: 0.36; }
+  .ghost-c { width: 46px; top: 14%; left: 78%; animation: float-c 6.2s ease-in-out infinite; opacity: 0.3; }
+
+  @media (prefers-reduced-motion: no-preference) {
+    @keyframes float-a { 0%,100% { transform: translateY(0) rotate(-2deg); } 50% { transform: translateY(-16px) rotate(2deg); } }
+    @keyframes float-b { 0%,100% { transform: translateY(0) rotate(3deg); } 50% { transform: translateY(-22px) rotate(-3deg); } }
+    @keyframes float-c { 0%,100% { transform: translateY(0) rotate(-4deg); } 50% { transform: translateY(-12px) rotate(4deg); } }
+    @keyframes pop-in { from { opacity: 0; transform: scale(0.8) translateY(6px); } to { opacity: 1; transform: scale(1) translateY(0); } }
+  }
+
+  .hero-fx {
+    position: absolute; inset: 0; z-index: 1; background: var(--bg); opacity: 0.86;
+    -webkit-mask-image: radial-gradient(circle 190px at var(--mx, 50%) var(--my, 18%), transparent 55%, black 100%);
+            mask-image: radial-gradient(circle 190px at var(--mx, 50%) var(--my, 18%), transparent 55%, black 100%);
+    transition: -webkit-mask-image 90ms linear; transition: mask-image 90ms linear;
+    pointer-events: none;
+  }
+
+  .hero-content { position: relative; z-index: 2; }
+  .eyebrow {
+    display: inline-block; font-size: 0.76rem; font-weight: 700; letter-spacing: 0.16em;
+    text-transform: uppercase; color: var(--accent-2); border: 1px solid var(--accent-2-dim);
+    border-radius: 999px; padding: 0.4em 1em; margin-bottom: 1.4rem;
+  }
+  .hero h1 { font-size: clamp(2.6rem, 9vw, 4.4rem); line-height: 1.05; color: var(--text); }
+  .hero h1 em { font-style: normal; color: var(--accent); text-shadow: var(--glow); }
+  .tagline { max-width: 30rem; margin: 1.3rem auto 0; color: var(--text-dim); font-size: 1.05rem; }
+  .hero-badge {
+    display: inline-flex; gap: 0.6em; align-items: baseline; margin-top: 2rem; padding: 0.6em 1.2em;
+    background: var(--surface); border: 1px solid var(--border); border-radius: 999px;
+    font-weight: 600; font-size: 0.92rem;
+  }
+  .hero-badge .dot { color: var(--accent); }
+
+  /* ---------- Countdown ---------- */
+  .countdown { padding: 3.4rem 0 1rem; text-align: center; }
+  .countdown-pre.is-collapsing { overflow: hidden; }
+  @media (prefers-reduced-motion: no-preference) {
+    .countdown-pre { transition: max-height 650ms ease, opacity 450ms ease; }
+  }
+  .countdown-pre.is-collapsed { opacity: 0; }
+  .countdown h2 { font-size: clamp(1.5rem, 4.4vw, 2rem); margin-bottom: 1.8rem; }
+  .dials { display: flex; justify-content: center; gap: clamp(0.5rem, 2.4vw, 1rem); flex-wrap: wrap; }
+  .dial {
+    width: clamp(72px, 20vw, 100px); aspect-ratio: 1; display: flex; flex-direction: column;
+    align-items: center; justify-content: center; border-radius: 50%;
+    background: var(--surface); border: 1px solid var(--border); box-shadow: var(--glow);
+  }
+  .dial-num {
+    font-family: var(--font-body); font-weight: 800; font-size: clamp(1.5rem, 5.5vw, 2.1rem);
+    font-variant-numeric: tabular-nums; color: var(--accent); line-height: 1;
+  }
+  .dial-label { margin-top: 0.35em; font-size: 0.62rem; text-transform: uppercase; letter-spacing: 0.1em; color: var(--text-dim); }
+  .countdown-note { margin-top: 1.4rem; font-weight: 700; color: var(--accent-2); min-height: 1.6em; }
+  .countdown-note.is-today {
+    font-family: var(--font-display); font-weight: 400; text-wrap: balance;
+    font-size: clamp(1.9rem, 8vw, 3rem); line-height: 1.2; color: var(--accent);
+    text-shadow: var(--glow); margin-top: 0;
+  }
+  .countdown-note.is-today .today-sub {
+    display: block; margin-top: 0.6rem; font-family: var(--font-body);
+    font-weight: 700; font-size: clamp(1rem, 3.6vw, 1.25rem); color: var(--text);
+    text-shadow: none;
+  }
+
+  /* ---------- Details plaque ---------- */
+  .details { padding: 2.6rem 0 1rem; }
+  .plaque {
+    position: relative; background: var(--surface); border: 1px solid var(--border);
+    border-radius: 18px; padding: 2.2rem clamp(1.4rem, 5vw, 2.6rem);
+  }
+  .plaque .corner-tl, .plaque .corner-tr, .plaque .corner-bl, .plaque .corner-br {
+    content: ""; position: absolute; width: 22px; height: 22px; border: 2px solid var(--accent-2);
+  }
+  .plaque .corner-tl { top: -1px; left: -1px; border-right: 0; border-bottom: 0; border-radius: 18px 0 0 0; }
+  .plaque .corner-tr { top: -1px; right: -1px; border-left: 0; border-bottom: 0; border-radius: 0 18px 0 0; }
+  .plaque .corner-bl { bottom: -1px; left: -1px; border-right: 0; border-top: 0; border-radius: 0 0 0 18px; }
+  .plaque .corner-br { bottom: -1px; right: -1px; border-left: 0; border-top: 0; border-radius: 0 0 18px 0; }
+
+  .plaque-eyebrow { font-size: 0.76rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.14em; color: var(--accent); margin: 0 0 1.4rem; }
+  .rows { display: flex; flex-direction: column; gap: 1.3rem; margin: 0 0 1.8rem; }
+  .row { display: grid; grid-template-columns: 6.5rem 1fr; gap: 1rem; align-items: baseline; }
+  .row dt { font-size: 0.78rem; text-transform: uppercase; letter-spacing: 0.08em; color: var(--text-dim); font-weight: 700; }
+  .row dd { margin: 0; font-size: 1.08rem; }
+  .row dd .sub { display: block; color: var(--text-dim); font-size: 0.92rem; margin-top: 0.15em; }
+
+  .cta {
+    display: inline-flex; align-items: center; gap: 0.5em; text-decoration: none;
+    background: var(--accent-2); color: var(--accent-2-ink); font-weight: 700; padding: 0.75em 1.4em;
+    border-radius: 999px; transition: transform 120ms ease, box-shadow 120ms ease; border: none; cursor: pointer;
+    font-family: var(--font-body); font-size: 1rem;
+  }
+  .cta:hover { transform: translateY(-1px); box-shadow: 0 8px 22px rgba(232, 179, 77, 0.28); }
+  .cta:focus-visible { outline: 2px solid var(--accent-2); outline-offset: 3px; }
+  .cta:disabled { opacity: 0.55; cursor: default; transform: none; box-shadow: none; }
+
+  @media (max-width: 420px) { .row { grid-template-columns: 1fr; gap: 0.2rem; } }
+
+  /* ---------- Mural ---------- */
+  .mural {
+    position: relative;
+    margin: 1rem -1.25rem 0;
+    padding: 3rem 1.25rem 2.6rem;
+    overflow: hidden;
+    isolation: isolate;
+    background:
+      radial-gradient(65% 55% at 10% 0%, rgba(232, 179, 77, 0.14), transparent 60%),
+      radial-gradient(70% 55% at 90% 100%, rgba(79, 227, 163, 0.16), transparent 65%),
+      linear-gradient(180deg, var(--bg-2), var(--bg) 65%);
+  }
+  .mural-ghosts { position: absolute; inset: 0; z-index: 0; }
+  .mural-ghosts .ghost { position: absolute; opacity: 0.22; filter: drop-shadow(0 0 14px rgba(79, 227, 163, 0.3)); }
+  .mural-ghosts .ghost-d { width: 56px; top: 4%; right: 8%; animation: float-b 9s ease-in-out infinite; }
+  .mural-ghosts .ghost-e { width: 40px; bottom: 6%; left: 6%; animation: float-c 7.4s ease-in-out infinite; }
+  .mural > :not(.mural-ghosts):not(.scare-overlay) { position: relative; z-index: 1; }
+  .mural h2 {
+    text-align: center; font-size: clamp(1.5rem, 4.4vw, 2rem);
+    -webkit-user-select: none; user-select: none; -webkit-touch-callout: none;
+  }
+  .mural .tagline { text-align: center; }
+  .photo-strip {
+    margin: 0 -0.6rem; border-radius: 14px; overflow: hidden; background: #000;
+    border: 2px solid rgba(79, 227, 163, 0.6);
+    box-shadow: var(--glow);
+  }
+  .photo-strip img { display: block; width: 100%; height: auto; }
+
+  .mural-form {
+    display: flex; gap: 0.6rem; margin-top: 1.6rem; flex-wrap: wrap;
+  }
+  .mural-form input[type="text"] {
+    flex: 1 1 10rem; min-width: 0; padding: 0.5em 0.9em; border-radius: 999px;
+    border: 1px solid var(--border); background: var(--surface); color: var(--text);
+    font-family: var(--font-body); font-size: 0.92rem;
+  }
+  .mural-form input[type="text"]:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+  .mural-form input[type="text"]::placeholder { color: var(--text-dim); }
+  .mural-form .cta { flex: 0 0 auto; padding: 0.5em 1.1em; font-size: 0.92rem; }
+
+  .mural-status { min-height: 1.6em; margin-top: 0.7rem; font-size: 0.92rem; font-weight: 600; opacity: 1; }
+  .mural-status[data-state="error"] { color: var(--danger); }
+  .mural-status[data-state="ok"] { color: var(--accent); }
+  .mural-status[data-state="busy"] { color: var(--text-dim); }
+  @media (prefers-reduced-motion: no-preference) {
+    .mural-status { transition: opacity 700ms ease; }
+  }
+  .mural-status.is-hidden { opacity: 0; }
+
+  .mural-wall {
+    display: flex; flex-wrap: wrap; gap: 0.6rem; justify-content: center; margin-top: 1rem; min-height: 3rem;
+  }
+  .mural-chip {
+    display: inline-flex; align-items: center; gap: 0.45em; padding: 0.5em 1em;
+    background: var(--surface); border: 1px solid var(--border); border-radius: 999px;
+    font-weight: 600; font-size: 0.92rem;
+  }
+  .mural-chip svg { width: 16px; height: 16px; flex: none; }
+  @media (prefers-reduced-motion: no-preference) { .mural-chip { animation: pop-in 260ms ease both; } }
+  .mural-empty { color: var(--text-dim); font-size: 0.92rem; text-align: center; }
+
+  /* ---------- Susto de Luigi ---------- */
+  .scare-overlay {
+    position: fixed; inset: 0; z-index: 80; display: flex; align-items: center; justify-content: center;
+    background: radial-gradient(circle at 50% 45%, rgba(0,0,0,0.6), rgba(0,0,0,0.8));
+    opacity: 0; pointer-events: none;
+  }
+  .scare-overlay img {
+    width: min(62vw, 300px); filter: drop-shadow(0 0 30px rgba(79, 227, 163, 0.5));
+    transform: scale(0.05);
+  }
+  @media (prefers-reduced-motion: no-preference) {
+    .scare-overlay { transition: opacity 200ms ease; }
+    .scare-overlay img { transition: transform 420ms cubic-bezier(.24, 1.6, .4, 1); }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .scare-overlay { transition: opacity 120ms linear; }
+  }
+  .scare-overlay.is-active { opacity: 1; }
+  .scare-overlay.is-active img { transform: scale(1); }
+
+  /* ---------- Footer ---------- */
+  .footer { text-align: center; padding: 3rem 0 0; color: var(--text-dim); }
+  .footer .mini-ghost { width: 40px; margin: 0 auto 1rem; opacity: 0.75; }
+  .footer p { margin: 0.3em 0; }
+  .footer .credit { font-size: 0.82rem; opacity: 0.75; }
+</style>
+</head>
+<body>
+
+<div class="page">
+  <section class="hero" id="hero">
+    <div class="ghosts" aria-hidden="true">
+      <div class="ghost ghost-a"><svg viewBox="0 0 100 100"><use href="#ghost-shape"/></svg></div>
+      <div class="ghost ghost-b"><svg viewBox="0 0 100 100"><use href="#ghost-shape"/></svg></div>
+      <div class="ghost ghost-c"><svg viewBox="0 0 100 100"><use href="#ghost-shape"/></svg></div>
+    </div>
+    <div class="hero-fx" id="fx" aria-hidden="true"></div>
+    <div class="hero-content">
+      <p class="eyebrow">Se buscan valientes</p>
+      <h1>El cumple<br>de <em>Nico</em></h1>
+      <p class="tagline">Una tarde para cazar fantasmas, juntar monedas y saltar hasta las estrellas. La Mansión se muda por un día a Jump Park.</p>
+      <div class="hero-badge"><span class="dot">●</span> 29 de agosto · Jump Park</div>
+    </div>
+  </section>
+
+  <figure class="photo-strip">
+    <img src="assets/nico-luigi.jpg" alt="Nico junto a Luigi y los fantasmas de la Mansión">
+  </figure>
+
+  <section class="countdown" aria-label="Cuenta regresiva para el cumple de Nico">
+    <div class="countdown-pre" id="countdown-pre">
+      <h2 id="countdown-heading">Faltan para la fiesta</h2>
+      <div class="dials" id="countdown-dials">
+        <div class="dial"><span class="dial-num" id="d-days">00</span><span class="dial-label">días</span></div>
+        <div class="dial"><span class="dial-num" id="d-hours">00</span><span class="dial-label">horas</span></div>
+        <div class="dial"><span class="dial-num" id="d-mins">00</span><span class="dial-label">min</span></div>
+        <div class="dial"><span class="dial-num" id="d-secs">00</span><span class="dial-label">seg</span></div>
+      </div>
+    </div>
+    <p class="countdown-note" id="countdown-note"></p>
+  </section>
+
+  <section class="details">
+    <div class="plaque">
+      <span class="corner-tl" aria-hidden="true"></span>
+      <span class="corner-tr" aria-hidden="true"></span>
+      <span class="corner-bl" aria-hidden="true"></span>
+      <span class="corner-br" aria-hidden="true"></span>
+      <p class="plaque-eyebrow">Instrucciones de la misión</p>
+      <dl class="rows">
+        <div class="row">
+          <dt>Cuándo</dt>
+          <dd>Sábado 29 de agosto de 2026<span class="sub">A partir de las 14:45 hs</span></dd>
+        </div>
+        <div class="row">
+          <dt>Dónde</dt>
+          <dd>Jump Park<span class="sub">Sanabria 2183, CABA</span></dd>
+        </div>
+      </dl>
+      <a class="cta" href="https://maps.app.goo.gl/vx63Gg83spUhiPd4A" target="_blank" rel="noopener">Cómo llegar →</a>
+    </div>
+  </section>
+
+  <section class="mural" aria-label="Mural de la mansión">
+    <div class="mural-ghosts" aria-hidden="true">
+      <div class="ghost ghost-d"><svg viewBox="0 0 100 100"><use href="#ghost-shape"/></svg></div>
+      <div class="ghost ghost-e"><svg viewBox="0 0 100 100"><use href="#ghost-shape"/></svg></div>
+    </div>
+    <h2 id="mural-title">El mural de la mansión</h2>
+    <p class="tagline">Dejá tu nombre y quedá marcado en la pared para siempre, como un verdadero cazafantasmas.</p>
+
+    <div class="scare-overlay" id="scare-overlay" aria-hidden="true">
+      <img src="assets/luigi-scare.png" alt="">
+    </div>
+    <audio id="scare-sound" src="assets/scare-sound.mp3" preload="auto"></audio>
+
+    <form class="mural-form" id="mural-form">
+      <input type="text" id="mural-name" name="name" placeholder="Tu nombre" maxlength="30" autocomplete="off" required>
+      <button type="submit" class="cta" id="mural-submit">Firmar el mural</button>
+    </form>
+    <p class="mural-status" id="mural-status" role="status" aria-live="polite"></p>
+
+    <div class="mural-wall" id="mural-wall" aria-live="polite">
+      <p class="mural-empty" id="mural-empty">Todavía no firmó nadie. ¡Sé el primer valiente!</p>
+    </div>
+  </section>
+
+  <footer class="footer">
+    <div class="mini-ghost" aria-hidden="true"><svg viewBox="0 0 100 100"><use href="#ghost-shape"/></svg></div>
+    <p>Traé ropa cómoda para saltar (y algo de coraje para los fantasmas).</p>
+    <p class="credit">Hecho con cariño para Nico — 2026</p>
+  </footer>
+</div>
+
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <defs>
+    <symbol id="ghost-shape" viewBox="0 0 100 100">
+      <path d="M10,62 C10,26 28,6 50,6 C72,6 90,26 90,62 L90,86 C90,86 83,76 75,86 C67,96 59,76 51,86 C50,87 50,87 49,86 C41,76 33,96 25,86 C17,76 10,86 10,86 Z"
+            fill="var(--accent)" fill-opacity="0.9"/>
+      <ellipse cx="37" cy="46" rx="6.5" ry="9" fill="var(--bg)"/>
+      <ellipse cx="63" cy="46" rx="6.5" ry="9" fill="var(--bg)"/>
+      <ellipse cx="35" cy="49" rx="2.4" ry="3" fill="var(--accent)"/>
+      <ellipse cx="61" cy="49" rx="2.4" ry="3" fill="var(--accent)"/>
+    </symbol>
+  </defs>
+</svg>
+
+<script>
+  (function () {
+    var hero = document.getElementById('hero');
+    var fx = document.getElementById('fx');
+    var reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+    if (hero && fx && !reduceMotion && window.matchMedia('(hover: hover)').matches) {
+      hero.addEventListener('pointermove', function (e) {
+        var rect = hero.getBoundingClientRect();
+        fx.style.setProperty('--mx', (e.clientX - rect.left) + 'px');
+        fx.style.setProperty('--my', (e.clientY - rect.top) + 'px');
+      });
+    }
+
+    var countdownTarget = new Date('2026-08-29T14:45:00-03:00').getTime();
+    var showTodayAt = new Date('2026-08-29T00:00:00-03:00').getTime();
+    var elDays = document.getElementById('d-days');
+    var elHours = document.getElementById('d-hours');
+    var elMins = document.getElementById('d-mins');
+    var elSecs = document.getElementById('d-secs');
+    var note = document.getElementById('countdown-note');
+    var pre = document.getElementById('countdown-pre');
+    var pad = function (n) { return String(n).padStart(2, '0'); };
+    var timer = null;
+
+    function tick() {
+      var now = Date.now();
+      if (now >= showTodayAt) {
+        if (pre) {
+          pre.style.maxHeight = pre.scrollHeight + 'px';
+          pre.classList.add('is-collapsing');
+          requestAnimationFrame(function () {
+            requestAnimationFrame(function () {
+              pre.style.maxHeight = '0px';
+              pre.classList.add('is-collapsed');
+            });
+          });
+        }
+        note.classList.add('is-today');
+        note.innerHTML = '¡El cumple es hoy!!!!<span class="today-sub">Te esperamos a las 14:45&nbsp;hs</span>';
+        if (timer) clearInterval(timer);
+        return;
+      }
+      var diff = countdownTarget - now;
+      var s = Math.floor(diff / 1000);
+      var d = Math.floor(s / 86400); s -= d * 86400;
+      var h = Math.floor(s / 3600); s -= h * 3600;
+      var m = Math.floor(s / 60); s -= m * 60;
+      elDays.textContent = pad(d);
+      elHours.textContent = pad(h);
+      elMins.textContent = pad(m);
+      elSecs.textContent = pad(s);
+      note.textContent = '';
+    }
+    tick();
+    timer = setInterval(tick, 1000);
+  })();
+</script>
+
+<script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.13.2/firebase-app.js";
+  import {
+    getFirestore, collection, addDoc, onSnapshot, query, orderBy, limit, serverTimestamp,
+    getDocs, writeBatch
+  } from "https://www.gstatic.com/firebasejs/10.13.2/firebase-firestore.js";
+
+  var firebaseConfig = {
+    apiKey: "AIzaSyCGWKZtlbo-fMdzosfFERoDgM3Lx5euh5g",
+    authDomain: "invitacionweb-957e9.firebaseapp.com",
+    projectId: "invitacionweb-957e9",
+    storageBucket: "invitacionweb-957e9.firebasestorage.app",
+    messagingSenderId: "681307607037",
+    appId: "1:681307607037:web:964009c966df77f9a21394"
+  };
+
+  var app = initializeApp(firebaseConfig);
+  var db = getFirestore(app);
+  var muralRef = collection(db, 'mural_luigi');
+
+  var CLEAR_MURAL_KEY = '2508';
+  var muralTitle = document.getElementById('mural-title');
+  var clearPressTimer = null;
+
+  function startClearPress() {
+    clearTimeout(clearPressTimer);
+    clearPressTimer = setTimeout(requestClearMural, 1100);
+  }
+  function cancelClearPress() {
+    clearTimeout(clearPressTimer);
+  }
+  if (muralTitle) {
+    muralTitle.addEventListener('pointerdown', startClearPress);
+    muralTitle.addEventListener('pointerup', cancelClearPress);
+    muralTitle.addEventListener('pointerleave', cancelClearPress);
+    muralTitle.addEventListener('pointercancel', cancelClearPress);
+  }
+
+  function requestClearMural() {
+    var key = window.prompt('Clave para limpiar el mural:');
+    if (key === null) return;
+    if (key !== CLEAR_MURAL_KEY) {
+      window.alert('Clave incorrecta.');
+      return;
+    }
+    if (!window.confirm('¿Borrar TODOS los nombres del mural? No se puede deshacer.')) return;
+
+    getDocs(muralRef).then(function (snapshot) {
+      if (snapshot.empty) return Promise.resolve();
+      var batch = writeBatch(db);
+      snapshot.forEach(function (docSnap) { batch.delete(docSnap.ref); });
+      return batch.commit();
+    }).then(function () {
+      window.alert('Mural limpiado.');
+    }).catch(function (err) {
+      window.alert('No se pudo limpiar el mural: ' + err.message);
+    });
+  }
+
+  var form = document.getElementById('mural-form');
+  var input = document.getElementById('mural-name');
+  var submitBtn = document.getElementById('mural-submit');
+  var status = document.getElementById('mural-status');
+  var wall = document.getElementById('mural-wall');
+  var empty = document.getElementById('mural-empty');
+
+  function ghostIcon() {
+    return '<svg viewBox="0 0 100 100" aria-hidden="true"><use href="#ghost-shape"/></svg>';
+  }
+
+  function renderNames(names) {
+    wall.innerHTML = '';
+    if (names.length === 0) {
+      wall.appendChild(empty);
+      return;
+    }
+    names.forEach(function (name) {
+      var chip = document.createElement('span');
+      chip.className = 'mural-chip';
+      chip.innerHTML = ghostIcon() + '<span></span>';
+      chip.querySelector('span:last-child').textContent = name;
+      wall.appendChild(chip);
+    });
+  }
+
+  onSnapshot(
+    query(muralRef, orderBy('createdAt', 'asc'), limit(300)),
+    function (snapshot) {
+      var names = [];
+      snapshot.forEach(function (doc) {
+        var data = doc.data();
+        if (data && typeof data.name === 'string') names.push(data.name);
+      });
+      renderNames(names);
+    },
+    function (err) {
+      status.dataset.state = 'error';
+      status.textContent = 'No se pudo cargar el mural (revisá las reglas de Firestore). ' + err.message;
+    }
+  );
+
+  var statusHideTimer = null;
+  var scareOverlay = document.getElementById('scare-overlay');
+  var scareSound = document.getElementById('scare-sound');
+  var scareHideTimer = null;
+
+  function triggerScare() {
+    if (!scareOverlay) return;
+    if (scareSound) {
+      scareSound.currentTime = 0;
+      scareSound.play().catch(function () {});
+    }
+    clearTimeout(scareHideTimer);
+    scareOverlay.classList.remove('is-active');
+    void scareOverlay.offsetWidth;
+    scareOverlay.classList.add('is-active');
+    scareHideTimer = setTimeout(function () {
+      scareOverlay.classList.remove('is-active');
+    }, 1400);
+  }
+
+  form.addEventListener('submit', function (e) {
+    e.preventDefault();
+    var name = input.value.trim();
+    if (!name) return;
+
+    triggerScare();
+    clearTimeout(statusHideTimer);
+    status.classList.remove('is-hidden');
+    submitBtn.disabled = true;
+    status.dataset.state = 'busy';
+    status.textContent = 'Guardando...';
+
+    addDoc(muralRef, { name: name, createdAt: serverTimestamp() })
+      .then(function () {
+        status.dataset.state = 'ok';
+        status.textContent = '¡Listo! Ya quedaste en el mural.';
+        input.value = '';
+        statusHideTimer = setTimeout(function () {
+          status.classList.add('is-hidden');
+        }, 2200);
+      })
+      .catch(function (err) {
+        status.dataset.state = 'error';
+        status.textContent = 'No se pudo guardar. ' + err.message;
+      })
+      .finally(function () {
+        submitBtn.disabled = false;
+      });
+  });
+</script>
+</body>
+</html>
